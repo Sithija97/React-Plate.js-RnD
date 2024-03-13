@@ -1,11 +1,10 @@
-import React from 'react';
-import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import {
   focusEditor,
   someNode,
   useEditorRef,
   useEditorSelector,
-} from '@udecode/plate-common';
+} from "@udecode/plate-common";
 import {
   deleteColumn,
   deleteRow,
@@ -14,9 +13,9 @@ import {
   insertTable,
   insertTableColumn,
   insertTableRow,
-} from '@udecode/plate-table';
+} from "@udecode/plate-table";
 
-import { Icons, iconVariants } from '@/components/icons';
+import { Icons, iconVariants } from "@/components/icons";
 
 import {
   DropdownMenu,
@@ -27,8 +26,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 export function TableDropdownMenu(props: DropdownMenuProps) {
   const tableSelected = useEditorSelector(
@@ -53,7 +52,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
       >
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
-            <Icons.table className={iconVariants({ variant: 'menuItem' })} />
+            <Icons.table className={iconVariants({ variant: "menuItem" })} />
             <span>Table</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
@@ -64,7 +63,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 focusEditor(editor);
               }}
             >
-              <Icons.add className={iconVariants({ variant: 'menuItem' })} />
+              <Icons.add className={iconVariants({ variant: "menuItem" })} />
               Insert table
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -75,7 +74,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 focusEditor(editor);
               }}
             >
-              <Icons.trash className={iconVariants({ variant: 'menuItem' })} />
+              <Icons.trash className={iconVariants({ variant: "menuItem" })} />
               Delete table
             </DropdownMenuItem>
           </DropdownMenuSubContent>
@@ -83,7 +82,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
 
         <DropdownMenuSub>
           <DropdownMenuSubTrigger disabled={!tableSelected}>
-            <Icons.column className={iconVariants({ variant: 'menuItem' })} />
+            <Icons.column className={iconVariants({ variant: "menuItem" })} />
             <span>Column</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
@@ -95,7 +94,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 focusEditor(editor);
               }}
             >
-              <Icons.add className={iconVariants({ variant: 'menuItem' })} />
+              <Icons.add className={iconVariants({ variant: "menuItem" })} />
               Insert column after
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -106,7 +105,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 focusEditor(editor);
               }}
             >
-              <Icons.minus className={iconVariants({ variant: 'menuItem' })} />
+              <Icons.minus className={iconVariants({ variant: "menuItem" })} />
               Delete column
             </DropdownMenuItem>
           </DropdownMenuSubContent>
@@ -114,7 +113,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
 
         <DropdownMenuSub>
           <DropdownMenuSubTrigger disabled={!tableSelected}>
-            <Icons.row className={iconVariants({ variant: 'menuItem' })} />
+            <Icons.row className={iconVariants({ variant: "menuItem" })} />
             <span>Row</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
@@ -126,7 +125,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 focusEditor(editor);
               }}
             >
-              <Icons.add className={iconVariants({ variant: 'menuItem' })} />
+              <Icons.add className={iconVariants({ variant: "menuItem" })} />
               Insert row after
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -137,7 +136,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 focusEditor(editor);
               }}
             >
-              <Icons.minus className={iconVariants({ variant: 'menuItem' })} />
+              <Icons.minus className={iconVariants({ variant: "menuItem" })} />
               Delete row
             </DropdownMenuItem>
           </DropdownMenuSubContent>

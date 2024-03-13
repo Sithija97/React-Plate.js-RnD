@@ -1,4 +1,3 @@
-import React from "react";
 import {
   MARK_BOLD,
   MARK_CODE,

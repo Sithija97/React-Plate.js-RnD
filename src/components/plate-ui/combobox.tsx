@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import * as Popover from '@radix-ui/react-popover';
-import { cn, withRef } from '@udecode/cn';
+import { useEffect } from "react";
+import * as Popover from "@radix-ui/react-popover";
+import { cn, withRef } from "@udecode/cn";
 import {
   comboboxActions,
   ComboboxContentItemProps,
@@ -14,16 +14,16 @@ import {
   useComboboxControls,
   useComboboxItem,
   useComboboxSelectors,
-} from '@udecode/plate-combobox';
+} from "@udecode/plate-combobox";
 import {
   useEditorRef,
   useEditorSelector,
   useEventEditorSelectors,
   usePlateSelectors,
-} from '@udecode/plate-common';
-import { createVirtualRef } from '@udecode/plate-floating';
+} from "@udecode/plate-common";
+import { createVirtualRef } from "@udecode/plate-floating";
 
-export const ComboboxItem = withRef<'div', ComboboxContentItemProps>(
+export const ComboboxItem = withRef<"div", ComboboxContentItemProps>(
   ({ combobox, index, item, onRenderItem, className, ...rest }, ref) => {
     const { props } = useComboboxItem({ item, index, combobox, onRenderItem });
 
@@ -31,8 +31,8 @@ export const ComboboxItem = withRef<'div', ComboboxContentItemProps>(
       <div
         ref={ref}
         className={cn(
-          'relative flex h-9 cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors',
-          'hover:bg-accent hover:text-accent-foreground data-[highlighted=true]:bg-accent data-[highlighted=true]:text-accent-foreground',
+          "relative flex h-9 cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
+          "hover:bg-accent hover:text-accent-foreground data-[highlighted=true]:bg-accent data-[highlighted=true]:text-accent-foreground",
           className
         )}
         {...props}
@@ -72,7 +72,7 @@ export function ComboboxContent(props: ComboboxContentProps) {
           side="bottom"
           align="start"
           className={cn(
-            'z-[500] m-0 max-h-[288px] w-[300px] overflow-scroll rounded-md bg-popover p-0 shadow-md'
+            "z-[500] m-0 max-h-[288px] w-[300px] overflow-scroll rounded-md bg-popover p-0 shadow-md"
           )}
           onOpenAutoFocus={(event) => event.preventDefault()}
         >

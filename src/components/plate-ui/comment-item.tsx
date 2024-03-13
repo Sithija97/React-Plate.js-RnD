@@ -1,17 +1,16 @@
-'use client';
+"use client";
 
-import React from 'react';
 import {
   CommentProvider,
   useCommentById,
   useCommentItemContentState,
-} from '@udecode/plate-comments';
-import { formatDistance } from 'date-fns';
+} from "@udecode/plate-comments";
+import { formatDistance } from "date-fns";
 
-import { CommentAvatar } from './comment-avatar';
-import { CommentMoreDropdown } from './comment-more-dropdown';
-import { CommentResolveButton } from './comment-resolve-button';
-import { CommentValue } from './comment-value';
+import { CommentAvatar } from "./comment-avatar";
+import { CommentMoreDropdown } from "./comment-more-dropdown";
+import { CommentResolveButton } from "./comment-resolve-button";
+import { CommentValue } from "./comment-value";
 
 type PlateCommentProps = {
   commentId: string;
