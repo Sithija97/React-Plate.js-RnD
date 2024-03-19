@@ -18,6 +18,7 @@ import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
 import { MediaToolbarButton } from "./media-toolbar-button";
 import { EmojiDropdownMenu } from "./emoji-dropdown-menu";
 import { TableDropdownMenu } from "./table-dropdown-menu";
+import { CustomChart } from "./custom-chart";
 
 export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
@@ -66,6 +67,7 @@ export function FixedToolbarButtons() {
               <MediaToolbarButton nodeType={ELEMENT_IMAGE} />
               <TableDropdownMenu />
               <EmojiDropdownMenu />
+              <CustomChart />
             </ToolbarGroup>
           </>
         )}
