@@ -5,12 +5,12 @@ import {
   getBlockAbove,
   getPluginType,
   getStartPoint,
-  insertNodes,
+  // insertNodes,
   selectEditor,
   someNode,
   withoutNormalizing,
 } from "@udecode/plate-common";
-import { ELEMENT_H1 } from "@udecode/plate-heading";
+// import { ELEMENT_H1 } from "@udecode/plate-heading";
 
 export const KEY_CHART = "column";
 
@@ -29,10 +29,10 @@ export const insertChart = (
         match: { type: getPluginType(editor, KEY_CHART) },
       })
     ) {
-      insertNodes(editor, {
-        type: ELEMENT_H1, // Adjust this for other element types (e.g., 'paragraph', 'list-item')
-        children: [{ text: "Hello World" }],
-      });
+      // insertNodes(editor, {
+      //   type: ELEMENT_H1, // Adjust this for other element types (e.g., 'paragraph', 'list-item')
+      //   children: [{ text: "Hello World" }],
+      // });
       if (editor.selection) {
         const tableEntry = getBlockAbove(editor, {
           match: { type: getPluginType(editor, KEY_CHART) },
