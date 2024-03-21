@@ -154,6 +154,8 @@ import { withDraggables } from "@/components/plate-ui/with-draggables";
 import { EmojiCombobox } from "@/components/plate-ui/emoji-combobox";
 import { TooltipProvider } from "@/components/plate-ui/tooltip";
 import { useRef } from "react";
+import { KEY_CHART, createChartPlugin } from "@/plugins/chart";
+import { ColumnsElement } from "../plate-ui/columns-element";
 
 const plugins = createPlugins(
   [
@@ -312,6 +314,7 @@ const plugins = createPlugins(
     createDeserializeCsvPlugin(),
     createDeserializeMdPlugin(),
     createJuicePlugin(),
+    createChartPlugin(),
   ],
   {
     components: withDraggables(
@@ -350,6 +353,7 @@ const plugins = createPlugins(
         [MARK_SUBSCRIPT]: withProps(PlateLeaf, { as: "sub" }),
         [MARK_SUPERSCRIPT]: withProps(PlateLeaf, { as: "sup" }),
         [MARK_UNDERLINE]: withProps(PlateLeaf, { as: "u" }),
+        [KEY_CHART]: ColumnsElement,
       })
     ),
   }

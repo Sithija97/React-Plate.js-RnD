@@ -60,6 +60,7 @@ import {
   Ungroup,
   WrapText,
   X,
+  BarChartBig,
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
@@ -172,6 +173,7 @@ export const Icons = {
   borderNone,
   borderRight,
   borderTop,
+  chart: BarChartBig,
   check: Check,
   chevronRight: ChevronRight,
   chevronsUpDown: ChevronsUpDown,
