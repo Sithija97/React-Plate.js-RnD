@@ -1,65 +1,77 @@
-"use client";
+'use client';
 
-import { cn, withRef, withVariants } from "@udecode/cn";
+import React from 'react';
+
+import { cn, createPrimitiveElement, withRef, withVariants } from '@udecode/cn';
 import {
+  type ResizeHandle as ResizeHandlePrimitive,
   Resizable as ResizablePrimitive,
-  ResizeHandle as ResizeHandlePrimitive,
-} from "@udecode/plate-resizable";
-import { cva } from "class-variance-authority";
+  useResizeHandle,
+  useResizeHandleState,
+} from '@udecode/plate-resizable';
+import { cva } from 'class-variance-authority';
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const mediaResizeHandleVariants = cva(
   cn(
-    "top-0 flex w-6 select-none flex-col justify-center",
+    'top-0 flex w-6 flex-col justify-center select-none',
     "after:flex after:h-16 after:w-[3px] after:rounded-[6px] after:bg-ring after:opacity-0 after:content-['_'] group-hover:after:opacity-100"
   ),
   {
     variants: {
       direction: {
-        left: "-left-3 -ml-3 pl-3",
-        right: "-right-3 -mr-3 items-end pr-3",
+        left: '-left-3 -ml-3 pl-3',
+        right: '-right-3 -mr-3 items-end pr-3',
       },
     },
   }
 );
 
-const resizeHandleVariants = cva(cn("absolute z-40"), {
+const resizeHandleVariants = cva(cn('absolute z-40'), {
   variants: {
     direction: {
-      left: "h-full cursor-col-resize",
-      right: "h-full cursor-col-resize",
-      top: "w-full cursor-row-resize",
-      bottom: "w-full cursor-row-resize",
+      bottom: 'w-full cursor-row-resize',
+      left: 'h-full cursor-col-resize',
+      right: 'h-full cursor-col-resize',
+      top: 'w-full cursor-row-resize',
     },
   },
 });
 
 const ResizeHandleVariants = withVariants(
-  ResizeHandlePrimitive,
+  createPrimitiveElement('div'),
   resizeHandleVariants,
-  ["direction"]
+  ['direction']
 );
 
 export const ResizeHandle = withRef<typeof ResizeHandlePrimitive>(
-  (props, ref) => (
-    <ResizeHandleVariants
-      ref={ref}
-      direction={props.options?.direction}
-      {...props}
-    />
-  )
+  ({ options, ...props }, ref) => {
+    const state = useResizeHandleState(options ?? {});
+    const resizeHandle = useResizeHandle(state);
+
+    if (state.readOnly) return null;
+
+    return (
+      <ResizeHandleVariants
+        ref={ref}
+        data-resizing={state.isResizing}
+        direction={options?.direction}
+        {...resizeHandle.props}
+        {...props}
+      />
+    );
+  }
 );
 
-const resizableVariants = cva("", {
+const resizableVariants = cva('', {
   variants: {
     align: {
-      left: "mr-auto",
-      center: "mx-auto",
-      right: "ml-auto",
+      center: 'mx-auto',
+      left: 'mr-auto',
+      right: 'ml-auto',
     },
   },
 });
 
 export const Resizable = withVariants(ResizablePrimitive, resizableVariants, [
-  "align",
+  'align',
 ]);

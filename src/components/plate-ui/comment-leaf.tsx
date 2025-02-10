@@ -1,18 +1,21 @@
-"use client";
+'use client';
 
-import { cn } from "@udecode/cn";
+import React from 'react';
+
+import type { TCommentText } from '@udecode/plate-comments';
+
+import { cn } from '@udecode/cn';
 import {
-  TCommentText,
   useCommentLeaf,
   useCommentLeafState,
-} from "@udecode/plate-comments";
-import { PlateLeaf, PlateLeafProps, Value } from "@udecode/plate-common";
+} from '@udecode/plate-comments/react';
+import { type PlateLeafProps, PlateLeaf } from '@udecode/plate/react';
 
 export function CommentLeaf({
   className,
   ...props
-}: PlateLeafProps<Value, TCommentText>) {
-  const { children, nodeProps, leaf } = props;
+}: PlateLeafProps<TCommentText>) {
+  const { children, leaf, nodeProps } = props;
 
   const state = useCommentLeafState({ leaf });
   const { props: rootProps } = useCommentLeaf(state);
@@ -23,7 +26,7 @@ export function CommentLeaf({
 
   if (!state.isActive) {
     for (let i = 1; i < state.commentCount; i++) {
-      aboveChildren = <span className="bg-primary/20">{aboveChildren}</span>;
+      aboveChildren = <span className="bg-highlight/25">{aboveChildren}</span>;
     }
   }
 
@@ -31,9 +34,9 @@ export function CommentLeaf({
     <PlateLeaf
       {...props}
       className={cn(
-        "border-b-2 border-b-primary/40",
-        state.isActive ? "bg-primary/40" : "bg-primary/20",
-        className
+        className,
+        'border-b-2 border-b-highlight/35 hover:bg-highlight/25',
+        state.isActive ? 'bg-highlight/25' : 'bg-highlight/15'
       )}
       nodeProps={{
         ...rootProps,

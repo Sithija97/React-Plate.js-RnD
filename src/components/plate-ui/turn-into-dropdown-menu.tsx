@@ -1,149 +1,169 @@
-import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-import { ELEMENT_BLOCKQUOTE } from "@udecode/plate-block-quote";
-import {
-  collapseSelection,
-  findNode,
-  focusEditor,
-  isBlock,
-  isCollapsed,
-  TElement,
-  toggleNodeType,
-  useEditorRef,
-  useEditorSelector,
-} from "@udecode/plate-common";
-import { ELEMENT_H1, ELEMENT_H2, ELEMENT_H3 } from "@udecode/plate-heading";
-import { ELEMENT_PARAGRAPH } from "@udecode/plate-paragraph";
+'use client';
 
-import { Icons } from "@/components/icons";
+import React from 'react';
+
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+
+import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
+import { CodeBlockPlugin } from '@udecode/plate-code-block/react';
+import { HEADING_KEYS } from '@udecode/plate-heading';
+import { INDENT_LIST_KEYS, ListStyleType } from '@udecode/plate-indent-list';
+import { TogglePlugin } from '@udecode/plate-toggle/react';
+import {
+  ParagraphPlugin,
+  useEditorRef,
+  useSelectionFragmentProp,
+} from '@udecode/plate/react';
+import {
+  ChevronRightIcon,
+  Columns3Icon,
+  FileCodeIcon,
+  Heading1Icon,
+  Heading2Icon,
+  Heading3Icon,
+  ListIcon,
+  ListOrderedIcon,
+  PilcrowIcon,
+  QuoteIcon,
+  SquareIcon,
+} from 'lucide-react';
+
+import {
+  getBlockType,
+  setBlockType,
+  STRUCTURAL_TYPES,
+} from '@/components/editor/transforms';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
-} from "./dropdown-menu";
-import { ToolbarButton } from "./toolbar";
+} from './dropdown-menu';
+import { ToolbarButton } from './toolbar';
 
-const items = [
+const turnIntoItems = [
   {
-    value: ELEMENT_PARAGRAPH,
-    label: "Paragraph",
-    description: "Paragraph",
-    icon: Icons.paragraph,
+    icon: <PilcrowIcon />,
+    keywords: ['paragraph'],
+    label: 'Text',
+    value: ParagraphPlugin.key,
   },
   {
-    value: ELEMENT_H1,
-    label: "Heading 1",
-    description: "Heading 1",
-    icon: Icons.h1,
+    icon: <Heading1Icon />,
+    keywords: ['title', 'h1'],
+    label: 'Heading 1',
+    value: HEADING_KEYS.h1,
   },
   {
-    value: ELEMENT_H2,
-    label: "Heading 2",
-    description: "Heading 2",
-    icon: Icons.h2,
+    icon: <Heading2Icon />,
+    keywords: ['subtitle', 'h2'],
+    label: 'Heading 2',
+    value: HEADING_KEYS.h2,
   },
   {
-    value: ELEMENT_H3,
-    label: "Heading 3",
-    description: "Heading 3",
-    icon: Icons.h3,
+    icon: <Heading3Icon />,
+    keywords: ['subtitle', 'h3'],
+    label: 'Heading 3',
+    value: HEADING_KEYS.h3,
   },
   {
-    value: ELEMENT_BLOCKQUOTE,
-    label: "Quote",
-    description: "Quote (⌘+⇧+.)",
-    icon: Icons.blockquote,
+    icon: <ListIcon />,
+    keywords: ['unordered', 'ul', '-'],
+    label: 'Bulleted list',
+    value: ListStyleType.Disc,
   },
-  // {
-  //   value: 'ul',
-  //   label: 'Bulleted list',
-  //   description: 'Bulleted list',
-  //   icon: Icons.ul,
-  // },
-  // {
-  //   value: 'ol',
-  //   label: 'Numbered list',
-  //   description: 'Numbered list',
-  //   icon: Icons.ol,
-  // },
+  {
+    icon: <ListOrderedIcon />,
+    keywords: ['ordered', 'ol', '1'],
+    label: 'Numbered list',
+    value: ListStyleType.Decimal,
+  },
+  {
+    icon: <SquareIcon />,
+    keywords: ['checklist', 'task', 'checkbox', '[]'],
+    label: 'To-do list',
+    value: INDENT_LIST_KEYS.todo,
+  },
+  {
+    icon: <ChevronRightIcon />,
+    keywords: ['collapsible', 'expandable'],
+    label: 'Toggle list',
+    value: TogglePlugin.key,
+  },
+  {
+    icon: <FileCodeIcon />,
+    keywords: ['```'],
+    label: 'Code',
+    value: CodeBlockPlugin.key,
+  },
+  {
+    icon: <QuoteIcon />,
+    keywords: ['citation', 'blockquote', '>'],
+    label: 'Quote',
+    value: BlockquotePlugin.key,
+  },
+  {
+    icon: <Columns3Icon />,
+    label: '3 columns',
+    value: 'action_three_columns',
+  },
 ];
 
-const defaultItem = items.find((item) => item.value === ELEMENT_PARAGRAPH)!;
-
 export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
-  const value: string = useEditorSelector((editor) => {
-    if (isCollapsed(editor.selection)) {
-      const entry = findNode<TElement>(editor, {
-        match: (n) => isBlock(editor, n),
-      });
-
-      if (entry) {
-        return (
-          items.find((item) => item.value === entry[0].type)?.value ??
-          ELEMENT_PARAGRAPH
-        );
-      }
-    }
-
-    return ELEMENT_PARAGRAPH;
-  }, []);
-
   const editor = useEditorRef();
   const openState = useOpenState();
 
-  const selectedItem =
-    items.find((item) => item.value === value) ?? defaultItem;
-  const { icon: SelectedItemIcon, label: selectedItemLabel } = selectedItem;
+  const value = useSelectionFragmentProp({
+    defaultValue: ParagraphPlugin.key,
+    structuralTypes: STRUCTURAL_TYPES,
+    getProp: (node) => getBlockType(node as any),
+  });
+  const selectedItem = React.useMemo(
+    () =>
+      turnIntoItems.find(
+        (item) => item.value === (value ?? ParagraphPlugin.key)
+      ) ?? turnIntoItems[0],
+    [value]
+  );
 
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
         <ToolbarButton
+          className="min-w-[125px]"
           pressed={openState.open}
           tooltip="Turn into"
           isDropdown
-          className="lg:min-w-[130px]"
         >
-          <SelectedItemIcon className="h-5 w-5 lg:hidden" />
-          <span className="max-lg:hidden">{selectedItemLabel}</span>
+          {selectedItem.label}
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="start" className="min-w-0">
-        <DropdownMenuLabel>Turn into</DropdownMenuLabel>
-
+      <DropdownMenuContent
+        className="ignore-click-outside/toolbar min-w-0"
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          editor.tf.focus();
+        }}
+        align="start"
+      >
         <DropdownMenuRadioGroup
-          className="flex flex-col gap-0.5"
           value={value}
           onValueChange={(type) => {
-            // if (type === 'ul' || type === 'ol') {
-            //   if (settingsStore.get.checkedId(KEY_LIST_STYLE_TYPE)) {
-            //     toggleIndentList(editor, {
-            //       listStyleType: type === 'ul' ? 'disc' : 'decimal',
-            //     });
-            //   } else if (settingsStore.get.checkedId('list')) {
-            //     toggleList(editor, { type });
-            //   }
-            // } else {
-            //   unwrapList(editor);
-            toggleNodeType(editor, { activeType: type });
-            // }
-
-            collapseSelection(editor);
-            focusEditor(editor);
+            setBlockType(editor, type);
           }}
+          label="Turn into"
         >
-          {items.map(({ value: itemValue, label, icon: Icon }) => (
+          {turnIntoItems.map(({ icon, label, value: itemValue }) => (
             <DropdownMenuRadioItem
               key={itemValue}
-              value={itemValue}
               className="min-w-[180px]"
+              value={itemValue}
             >
-              <Icon className="mr-2 h-5 w-5" />
+              {icon}
               {label}
             </DropdownMenuRadioItem>
           ))}

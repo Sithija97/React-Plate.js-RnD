@@ -1,15 +1,19 @@
-import { cn, withRef } from "@udecode/cn";
-import { PlateLeaf } from "@udecode/plate-common";
+'use client';
+
+import React from 'react';
+
+import { cn, withRef } from '@udecode/cn';
+import { PlateLeaf } from '@udecode/plate/react';
 
 export const HighlightLeaf = withRef<typeof PlateLeaf>(
-  ({ className, children, ...props }, ref) => (
+  ({ children, className, ...props }, ref) => (
     <PlateLeaf
       ref={ref}
-      asChild
-      className={cn("bg-primary/20 text-inherit dark:bg-primary/40", className)}
+      as="mark"
+      className={cn(className, 'bg-highlight/30 text-inherit')}
       {...props}
     >
-      <mark>{children}</mark>
+      {children}
     </PlateLeaf>
   )
 );

@@ -1,43 +1,48 @@
+'use client';
+
 import React, { useEffect } from 'react';
+
+import type { WithRequiredKey } from '@udecode/plate';
+
 import {
-  isSelectionExpanded,
+  FloatingMedia as FloatingMediaPrimitive,
+  FloatingMediaStore,
+  useFloatingMediaValue,
+} from '@udecode/plate-media/react';
+import {
   useEditorSelector,
   useElement,
+  useReadOnly,
   useRemoveNodeButton,
-} from '@udecode/plate-common';
-import {
-  floatingMediaActions,
-  FloatingMedia as FloatingMediaPrimitive,
-  useFloatingMediaSelectors,
-} from '@udecode/plate-media';
-import { useReadOnly, useSelected } from 'slate-react';
-
-import { Icons } from '@/components/icons';
+  useSelected,
+} from '@udecode/plate/react';
+import { Link, Trash2Icon } from 'lucide-react';
 
 import { Button, buttonVariants } from './button';
+import { CaptionButton } from './caption';
 import { inputVariants } from './input';
 import { Popover, PopoverAnchor, PopoverContent } from './popover';
 import { Separator } from './separator';
 
 export interface MediaPopoverProps {
-  pluginKey?: string;
   children: React.ReactNode;
+  plugin: WithRequiredKey;
 }
 
-export function MediaPopover({ pluginKey, children }: MediaPopoverProps) {
+export function MediaPopover({ children, plugin }: MediaPopoverProps) {
   const readOnly = useReadOnly();
   const selected = useSelected();
 
   const selectionCollapsed = useEditorSelector(
-    (editor) => !isSelectionExpanded(editor),
+    (editor) => !editor.api.isExpanded(),
     []
   );
   const isOpen = !readOnly && selected && selectionCollapsed;
-  const isEditing = useFloatingMediaSelectors().isEditing();
+  const isEditing = useFloatingMediaValue('isEditing');
 
   useEffect(() => {
     if (!isOpen && isEditing) {
-      floatingMediaActions.isEditing(false);
+      FloatingMediaStore.set('isEditing', false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -58,31 +63,31 @@ export function MediaPopover({ pluginKey, children }: MediaPopoverProps) {
         {isEditing ? (
           <div className="flex w-[330px] flex-col">
             <div className="flex items-center">
-              <div className="flex items-center pl-3 text-muted-foreground">
-                <Icons.link className="h-4 w-4" />
+              <div className="flex items-center pr-1 pl-2 text-muted-foreground">
+                <Link className="size-4" />
               </div>
 
               <FloatingMediaPrimitive.UrlInput
-                className={inputVariants({ variant: 'ghost', h: 'sm' })}
+                className={inputVariants({ h: 'sm', variant: 'ghost' })}
                 placeholder="Paste the embed link..."
-                options={{
-                  pluginKey,
-                }}
+                options={{ plugin }}
               />
             </div>
           </div>
         ) : (
-          <div className="box-content flex h-9 items-center gap-1">
+          <div className="box-content flex items-center">
             <FloatingMediaPrimitive.EditButton
-              className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+              className={buttonVariants({ size: 'sm', variant: 'ghost' })}
             >
               Edit link
             </FloatingMediaPrimitive.EditButton>
 
-            <Separator orientation="vertical" className="my-1" />
+            <CaptionButton variant="ghost">Caption</CaptionButton>
 
-            <Button variant="ghost" size="sms" {...buttonProps}>
-              <Icons.delete className="h-4 w-4" />
+            <Separator orientation="vertical" className="mx-1 h-6" />
+
+            <Button size="icon" variant="ghost" {...buttonProps}>
+              <Trash2Icon />
             </Button>
           </div>
         )}
