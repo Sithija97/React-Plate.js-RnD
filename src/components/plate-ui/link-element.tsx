@@ -1,25 +1,31 @@
-import { cn, withRef } from "@udecode/cn";
-import { PlateElement, useElement } from "@udecode/plate-common";
-import { TLinkElement, useLink } from "@udecode/plate-link";
+'use client';
+
+import React from 'react';
+
+import type { TLinkElement } from '@udecode/plate-link';
+
+import { cn, withRef } from '@udecode/cn';
+import { useLink } from '@udecode/plate-link/react';
+
+import { PlateElement } from './plate-element';
 
 export const LinkElement = withRef<typeof PlateElement>(
-  ({ className, children, ...props }, ref) => {
-    const element = useElement<TLinkElement>();
+  ({ children, className, ...props }, ref) => {
+    const element = props.element as TLinkElement;
     const { props: linkProps } = useLink({ element });
 
     return (
       <PlateElement
         ref={ref}
-        asChild
+        as="a"
         className={cn(
-          "font-medium text-primary underline decoration-primary underline-offset-4",
-          className
+          className,
+          'font-medium text-primary underline decoration-primary underline-offset-4'
         )}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {...(linkProps as any)}
         {...props}
       >
-        <a>{children}</a>
+        {children}
       </PlateElement>
     );
   }

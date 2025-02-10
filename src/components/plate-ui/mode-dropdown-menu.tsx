@@ -1,12 +1,11 @@
-import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-import {
-  focusEditor,
-  useEditorReadOnly,
-  useEditorRef,
-  usePlateStore,
-} from "@udecode/plate-common";
+'use client';
 
-import { Icons } from "@/components/icons";
+import React from 'react';
+
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+
+import { useEditorRef, usePlateState } from '@udecode/plate/react';
+import { Eye, Pen } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -15,29 +14,28 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
-} from "./dropdown-menu";
-import { ToolbarButton } from "./toolbar";
+} from './dropdown-menu';
+import { ToolbarButton } from './toolbar';
 
 export function ModeDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
-  const setReadOnly = usePlateStore().set.readOnly();
-  const readOnly = useEditorReadOnly();
+  const [readOnly, setReadOnly] = usePlateState('readOnly');
   const openState = useOpenState();
 
-  let value = "editing";
-  if (readOnly) value = "viewing";
+  let value = 'editing';
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (readOnly) value = 'viewing';
+
   const item: any = {
     editing: (
       <>
-        <Icons.editing className="mr-2 h-5 w-5" />
+        <Pen />
         <span className="hidden lg:inline">Editing</span>
       </>
     ),
     viewing: (
       <>
-        <Icons.viewing className="mr-2 h-5 w-5" />
+        <Eye />
         <span className="hidden lg:inline">Viewing</span>
       </>
     ),
@@ -50,28 +48,26 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
           pressed={openState.open}
           tooltip="Editing mode"
           isDropdown
-          className="min-w-[auto] lg:min-w-[130px]"
         >
           {item[value]}
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="start" className="min-w-[180px]">
+      <DropdownMenuContent className="min-w-[180px]" align="start">
         <DropdownMenuRadioGroup
-          className="flex flex-col gap-0.5"
           value={value}
           onValueChange={(newValue) => {
-            if (newValue !== "viewing") {
+            if (newValue !== 'viewing') {
               setReadOnly(false);
             }
-
-            if (newValue === "viewing") {
+            if (newValue === 'viewing') {
               setReadOnly(true);
+
               return;
             }
+            if (newValue === 'editing') {
+              editor.tf.focus();
 
-            if (newValue === "editing") {
-              focusEditor(editor);
               return;
             }
           }}

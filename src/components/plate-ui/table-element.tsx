@@ -1,49 +1,260 @@
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { PopoverAnchor } from "@radix-ui/react-popover";
-import { cn, withRef } from "@udecode/cn";
+'use client';
+
+import React from 'react';
+
+import type * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import type { TTableElement } from '@udecode/plate-table';
+
+import { PopoverAnchor } from '@radix-ui/react-popover';
+import { cn, withRef } from '@udecode/cn';
+import { BlockSelectionPlugin } from '@udecode/plate-selection/react';
 import {
-  isSelectionExpanded,
-  PlateElement,
+  TablePlugin,
+  TableProvider,
+  useTableBordersDropdownMenuContentState,
+  useTableElement,
+  useTableMergeState,
+} from '@udecode/plate-table/react';
+import {
+  useEditorPlugin,
   useEditorRef,
   useEditorSelector,
   useElement,
+  usePluginOption,
+  useReadOnly,
   useRemoveNodeButton,
+  useSelected,
   withHOC,
-} from "@udecode/plate-common";
+} from '@udecode/plate/react';
 import {
-  mergeTableCells,
-  TableProvider,
-  TTableElement,
-  unmergeTableCells,
-  useTableBordersDropdownMenuContentState,
-  useTableElement,
-  useTableElementState,
-  useTableMergeState,
-} from "@udecode/plate-table";
-import { useReadOnly, useSelected } from "slate-react";
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  CombineIcon,
+  Grid2X2Icon,
+  SquareSplitHorizontalIcon,
+  Trash2Icon,
+  XIcon,
+} from 'lucide-react';
 
-import { Icons, iconVariants } from "@/components/icons";
-
-import { Button } from "./button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuPortal,
   DropdownMenuTrigger,
-} from "./dropdown-menu";
-import { Popover, PopoverContent, popoverVariants } from "./popover";
-import { Separator } from "./separator";
+} from './dropdown-menu';
+import { PlateElement } from './plate-element';
+import { Popover, PopoverContent } from './popover';
+import {
+  BorderAll,
+  BorderBottom,
+  BorderLeft,
+  BorderNone,
+  BorderRight,
+  BorderTop,
+} from './table-icons';
+import { Toolbar, ToolbarButton, ToolbarGroup } from './toolbar';
+
+export const TableElement = withHOC(
+  TableProvider,
+  withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
+    const readOnly = useReadOnly();
+    const isSelectionAreaVisible = usePluginOption(
+      BlockSelectionPlugin,
+      'isSelectionAreaVisible'
+    );
+    const hasControls = !readOnly && !isSelectionAreaVisible;
+    const selected = useSelected();
+    const {
+      isSelectingCell,
+      marginLeft,
+      props: tableProps,
+    } = useTableElement();
+
+    const content = (
+      <PlateElement
+        className={cn(
+          className,
+          'overflow-x-auto py-5',
+          hasControls && '-ml-2'
+        )}
+        style={{ paddingLeft: marginLeft }}
+        blockSelectionClassName={cn(hasControls && 'left-2')}
+        {...props}
+      >
+        <div className="group/table relative w-fit">
+          <table
+            ref={ref}
+            className={cn(
+              'mr-0 ml-px table h-px table-fixed border-collapse',
+              isSelectingCell && 'selection:bg-transparent'
+            )}
+            {...tableProps}
+          >
+            <tbody className="min-w-full">{children}</tbody>
+          </table>
+        </div>
+      </PlateElement>
+    );
+
+    if (readOnly || !selected) {
+      return content;
+    }
+
+    return <TableFloatingToolbar>{content}</TableFloatingToolbar>;
+  })
+);
+
+export const TableFloatingToolbar = withRef<typeof PopoverContent>(
+  ({ children, ...props }, ref) => {
+    const { tf } = useEditorPlugin(TablePlugin);
+    const element = useElement<TTableElement>();
+    const { props: buttonProps } = useRemoveNodeButton({ element });
+    const collapsed = useEditorSelector(
+      (editor) => !editor.api.isExpanded(),
+      []
+    );
+
+    const { canMerge, canSplit } = useTableMergeState();
+
+    return (
+      <Popover open={canMerge || canSplit || collapsed} modal={false}>
+        <PopoverAnchor asChild>{children}</PopoverAnchor>
+        <PopoverContent
+          ref={ref}
+          asChild
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          contentEditable={false}
+          {...props}
+        >
+          <Toolbar
+            className="flex scrollbar-hide w-auto max-w-[80vw] flex-row overflow-x-auto rounded-md border bg-popover p-1 shadow-md print:hidden"
+            contentEditable={false}
+          >
+            <ToolbarGroup>
+              {canMerge && (
+                <ToolbarButton
+                  onClick={() => tf.table.merge()}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tooltip="Merge cells"
+                >
+                  <CombineIcon />
+                </ToolbarButton>
+              )}
+              {canSplit && (
+                <ToolbarButton
+                  onClick={() => tf.table.split()}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tooltip="Split cell"
+                >
+                  <SquareSplitHorizontalIcon />
+                </ToolbarButton>
+              )}
+
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <ToolbarButton tooltip="Cell borders">
+                    <Grid2X2Icon />
+                  </ToolbarButton>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuPortal>
+                  <TableBordersDropdownMenuContent />
+                </DropdownMenuPortal>
+              </DropdownMenu>
+
+              {collapsed && (
+                <ToolbarGroup>
+                  <ToolbarButton tooltip="Delete table" {...buttonProps}>
+                    <Trash2Icon />
+                  </ToolbarButton>
+                </ToolbarGroup>
+              )}
+            </ToolbarGroup>
+
+            {collapsed && (
+              <ToolbarGroup>
+                <ToolbarButton
+                  onClick={() => {
+                    tf.insert.tableRow({ before: true });
+                  }}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tooltip="Insert row before"
+                >
+                  <ArrowUp />
+                </ToolbarButton>
+                <ToolbarButton
+                  onClick={() => {
+                    tf.insert.tableRow();
+                  }}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tooltip="Insert row after"
+                >
+                  <ArrowDown />
+                </ToolbarButton>
+                <ToolbarButton
+                  onClick={() => {
+                    tf.remove.tableRow();
+                  }}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tooltip="Delete row"
+                >
+                  <XIcon />
+                </ToolbarButton>
+              </ToolbarGroup>
+            )}
+
+            {collapsed && (
+              <ToolbarGroup>
+                <ToolbarButton
+                  onClick={() => {
+                    tf.insert.tableColumn({ before: true });
+                  }}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tooltip="Insert column before"
+                >
+                  <ArrowLeft />
+                </ToolbarButton>
+                <ToolbarButton
+                  onClick={() => {
+                    tf.insert.tableColumn();
+                  }}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tooltip="Insert column after"
+                >
+                  <ArrowRight />
+                </ToolbarButton>
+                <ToolbarButton
+                  onClick={() => {
+                    tf.remove.tableColumn();
+                  }}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tooltip="Delete column"
+                >
+                  <XIcon />
+                </ToolbarButton>
+              </ToolbarGroup>
+            )}
+          </Toolbar>
+        </PopoverContent>
+      </Popover>
+    );
+  }
+);
 
 export const TableBordersDropdownMenuContent = withRef<
   typeof DropdownMenuPrimitive.Content
 >((props, ref) => {
+  const editor = useEditorRef();
   const {
     getOnSelectTableBorder,
-    hasOuterBorders,
     hasBottomBorder,
     hasLeftBorder,
     hasNoBorders,
+    hasOuterBorders,
     hasRightBorder,
     hasTopBorder,
   } = useTableBordersDropdownMenuContentState();
@@ -51,188 +262,63 @@ export const TableBordersDropdownMenuContent = withRef<
   return (
     <DropdownMenuContent
       ref={ref}
-      className={cn("min-w-[220px]")}
-      side="right"
+      className={cn('min-w-[220px]')}
+      onCloseAutoFocus={(e) => {
+        e.preventDefault();
+        editor.tf.focus();
+      }}
       align="start"
+      side="right"
       sideOffset={0}
       {...props}
     >
-      <DropdownMenuCheckboxItem
-        checked={hasBottomBorder}
-        onCheckedChange={getOnSelectTableBorder("bottom")}
-      >
-        <Icons.borderBottom className={iconVariants({ size: "sm" })} />
-        <div>Bottom Border</div>
-      </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem
-        checked={hasTopBorder}
-        onCheckedChange={getOnSelectTableBorder("top")}
-      >
-        <Icons.borderTop className={iconVariants({ size: "sm" })} />
-        <div>Top Border</div>
-      </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem
-        checked={hasLeftBorder}
-        onCheckedChange={getOnSelectTableBorder("left")}
-      >
-        <Icons.borderLeft className={iconVariants({ size: "sm" })} />
-        <div>Left Border</div>
-      </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem
-        checked={hasRightBorder}
-        onCheckedChange={getOnSelectTableBorder("right")}
-      >
-        <Icons.borderRight className={iconVariants({ size: "sm" })} />
-        <div>Right Border</div>
-      </DropdownMenuCheckboxItem>
+      <DropdownMenuGroup>
+        <DropdownMenuCheckboxItem
+          checked={hasTopBorder}
+          onCheckedChange={getOnSelectTableBorder('top')}
+        >
+          <BorderTop />
+          <div>Top Border</div>
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={hasRightBorder}
+          onCheckedChange={getOnSelectTableBorder('right')}
+        >
+          <BorderRight />
+          <div>Right Border</div>
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={hasBottomBorder}
+          onCheckedChange={getOnSelectTableBorder('bottom')}
+        >
+          <BorderBottom />
+          <div>Bottom Border</div>
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={hasLeftBorder}
+          onCheckedChange={getOnSelectTableBorder('left')}
+        >
+          <BorderLeft />
+          <div>Left Border</div>
+        </DropdownMenuCheckboxItem>
+      </DropdownMenuGroup>
 
-      <Separator />
-
-      <DropdownMenuCheckboxItem
-        checked={hasNoBorders}
-        onCheckedChange={getOnSelectTableBorder("none")}
-      >
-        <Icons.borderNone className={iconVariants({ size: "sm" })} />
-        <div>No Border</div>
-      </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem
-        checked={hasOuterBorders}
-        onCheckedChange={getOnSelectTableBorder("outer")}
-      >
-        <Icons.borderAll className={iconVariants({ size: "sm" })} />
-        <div>Outside Borders</div>
-      </DropdownMenuCheckboxItem>
+      <DropdownMenuGroup>
+        <DropdownMenuCheckboxItem
+          checked={hasNoBorders}
+          onCheckedChange={getOnSelectTableBorder('none')}
+        >
+          <BorderNone />
+          <div>No Border</div>
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={hasOuterBorders}
+          onCheckedChange={getOnSelectTableBorder('outer')}
+        >
+          <BorderAll />
+          <div>Outside Borders</div>
+        </DropdownMenuCheckboxItem>
+      </DropdownMenuGroup>
     </DropdownMenuContent>
   );
 });
-
-export const TableFloatingToolbar = withRef<typeof PopoverContent>(
-  ({ children, ...props }, ref) => {
-    const element = useElement<TTableElement>();
-    const { props: buttonProps } = useRemoveNodeButton({ element });
-
-    const selectionCollapsed = useEditorSelector(
-      (editor) => !isSelectionExpanded(editor),
-      []
-    );
-
-    const readOnly = useReadOnly();
-    const selected = useSelected();
-    const editor = useEditorRef();
-
-    const collapsed = !readOnly && selected && selectionCollapsed;
-    const open = !readOnly && selected;
-
-    const { canMerge, canUnmerge } = useTableMergeState();
-
-    const mergeContent = canMerge && (
-      <Button
-        contentEditable={false}
-        variant="ghost"
-        isMenu
-        onClick={() => mergeTableCells(editor)}
-      >
-        <Icons.combine className="mr-2 h-4 w-4" />
-        Merge
-      </Button>
-    );
-
-    const unmergeButton = canUnmerge && (
-      <Button
-        contentEditable={false}
-        variant="ghost"
-        isMenu
-        onClick={() => unmergeTableCells(editor)}
-      >
-        <Icons.ungroup className="mr-2 h-4 w-4" />
-        Unmerge
-      </Button>
-    );
-
-    const bordersContent = collapsed && (
-      <>
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" isMenu>
-              <Icons.borderAll className="mr-2 h-4 w-4" />
-              Borders
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuPortal>
-            <TableBordersDropdownMenuContent />
-          </DropdownMenuPortal>
-        </DropdownMenu>
-
-        <Button contentEditable={false} variant="ghost" isMenu {...buttonProps}>
-          <Icons.delete className="mr-2 h-4 w-4" />
-          Delete
-        </Button>
-      </>
-    );
-
-    return (
-      <Popover open={open} modal={false}>
-        <PopoverAnchor asChild>{children}</PopoverAnchor>
-        {(canMerge || canUnmerge || collapsed) && (
-          <PopoverContent
-            ref={ref}
-            className={cn(
-              popoverVariants(),
-              "flex w-[220px] flex-col gap-1 p-1"
-            )}
-            onOpenAutoFocus={(e) => e.preventDefault()}
-            {...props}
-          >
-            {unmergeButton}
-            {mergeContent}
-            {bordersContent}
-          </PopoverContent>
-        )}
-      </Popover>
-    );
-  }
-);
-
-export const TableElement = withHOC(
-  TableProvider,
-  withRef<typeof PlateElement>(({ className, children, ...props }, ref) => {
-    const { colSizes, isSelectingCell, minColumnWidth, marginLeft } =
-      useTableElementState();
-    const { props: tableProps, colGroupProps } = useTableElement();
-
-    return (
-      <TableFloatingToolbar>
-        <div style={{ paddingLeft: marginLeft }}>
-          <PlateElement
-            ref={ref}
-            asChild
-            className={cn(
-              "my-4 ml-px mr-0 table h-px w-full table-fixed border-collapse",
-              isSelectingCell && "[&_*::selection]:bg-none",
-              className
-            )}
-            {...tableProps}
-            {...props}
-          >
-            <table>
-              <colgroup {...colGroupProps}>
-                {colSizes.map((width, index) => (
-                  <col
-                    key={index}
-                    style={{
-                      minWidth: minColumnWidth,
-                      width: width || undefined,
-                    }}
-                  />
-                ))}
-              </colgroup>
-
-              <tbody className="min-w-full">{children}</tbody>
-            </table>
-          </PlateElement>
-        </div>
-      </TableFloatingToolbar>
-    );
-  })
-);

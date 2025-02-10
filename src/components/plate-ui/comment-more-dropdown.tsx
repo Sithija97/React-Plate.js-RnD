@@ -1,39 +1,39 @@
-"use client";
+'use client';
 
-import { cn } from "@udecode/cn";
+import React from 'react';
+
+import { cn } from '@udecode/cn';
 import {
   useCommentDeleteButton,
-  useCommentDeleteButtonState,
   useCommentEditButton,
-  useCommentEditButtonState,
-} from "@udecode/plate-comments";
+} from '@udecode/plate-comments/react';
+import { MoreHorizontal } from 'lucide-react';
 
-import { Icons } from "@/components/icons";
-
-import { Button } from "./button";
+import { Button } from './button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./dropdown-menu";
+} from './dropdown-menu';
 
 export function CommentMoreDropdown() {
-  const editButtonState = useCommentEditButtonState();
-  const { props: editProps } = useCommentEditButton(editButtonState);
-  const deleteButtonState = useCommentDeleteButtonState();
-  const { props: deleteProps } = useCommentDeleteButton(deleteButtonState);
+  const { props: editProps } = useCommentEditButton();
+  const { props: deleteProps } = useCommentDeleteButton();
 
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={cn("h-6 p-1 text-muted-foreground")}>
-          <Icons.more className="h-4 w-4" />
+        <Button variant="ghost" className={cn('h-6 p-1 text-muted-foreground')}>
+          <MoreHorizontal className="size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem {...editProps}>Edit comment</DropdownMenuItem>
-        <DropdownMenuItem {...deleteProps}>Delete comment</DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem {...editProps}>Edit comment</DropdownMenuItem>
+          <DropdownMenuItem {...deleteProps}>Delete comment</DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

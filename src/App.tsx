@@ -1,14 +1,8 @@
 import "./App.css";
-import { PlateEditor } from "./components/pages/editor";
+import { PlateEditor } from "./components/editor/plate-editor";
 
 function App() {
-  return (
-    <div className="flex items-start justify-center h-screen">
-      <div className="w-5/6">
-        <PlateEditor />
-      </div>
-    </div>
-  );
+  return <PlateEditor />;
 }
 
 export default App;
