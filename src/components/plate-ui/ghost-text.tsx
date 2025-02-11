@@ -1,16 +1,12 @@
-'use client';
-
-import React from 'react';
-
-import { CopilotPlugin } from '@udecode/plate-ai/react';
-import { useElement, usePluginOption } from '@udecode/plate/react';
+import { CopilotPlugin } from "@udecode/plate-ai/react";
+import { useElement, usePluginOption } from "@udecode/plate/react";
 
 export const GhostText = () => {
   const element = useElement();
 
   const isSuggested = usePluginOption(
     CopilotPlugin,
-    'isSuggested',
+    "isSuggested",
     element.id as string
   );
 
@@ -20,7 +16,7 @@ export const GhostText = () => {
 };
 
 export function GhostTextContent() {
-  const suggestionText = usePluginOption(CopilotPlugin, 'suggestionText');
+  const suggestionText = usePluginOption(CopilotPlugin, "suggestionText");
 
   return (
     <span

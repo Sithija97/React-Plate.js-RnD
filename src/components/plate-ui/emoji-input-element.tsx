@@ -1,13 +1,11 @@
-'use client';
+import { useMemo, useState } from "react";
 
-import React, { useMemo, useState } from 'react';
+import { withRef } from "@udecode/cn";
+import { EmojiInlineIndexSearch, insertEmoji } from "@udecode/plate-emoji";
+import { EmojiPlugin } from "@udecode/plate-emoji/react";
+import { usePluginOption } from "@udecode/plate/react";
 
-import { withRef } from '@udecode/cn';
-import { EmojiInlineIndexSearch, insertEmoji } from '@udecode/plate-emoji';
-import { EmojiPlugin } from '@udecode/plate-emoji/react';
-import { usePluginOption } from '@udecode/plate/react';
-
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from "@/hooks/use-debounce";
 
 import {
   InlineCombobox,
@@ -16,14 +14,14 @@ import {
   InlineComboboxGroup,
   InlineComboboxInput,
   InlineComboboxItem,
-} from './inline-combobox';
-import { PlateElement } from './plate-element';
+} from "./inline-combobox";
+import { PlateElement } from "./plate-element";
 
 export const EmojiInputElement = withRef<typeof PlateElement>(
   ({ className, ...props }, ref) => {
     const { children, editor, element } = props;
-    const data = usePluginOption(EmojiPlugin, 'data')!;
-    const [value, setValue] = useState('');
+    const data = usePluginOption(EmojiPlugin, "data")!;
+    const [value, setValue] = useState("");
     const debouncedValue = useDebounce(value, 100);
     const isPending = value !== debouncedValue;
 
@@ -31,7 +29,7 @@ export const EmojiInputElement = withRef<typeof PlateElement>(
       if (debouncedValue.trim().length === 0) return [];
 
       return EmojiInlineIndexSearch.getInstance(data)
-        .search(debouncedValue.replace(/:$/, ''))
+        .search(debouncedValue.replace(/:$/, ""))
         .get();
     }, [data, debouncedValue]);
 

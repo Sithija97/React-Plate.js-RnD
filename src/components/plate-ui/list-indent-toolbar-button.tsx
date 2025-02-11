@@ -1,13 +1,9 @@
-'use client';
+import { withRef } from "@udecode/cn";
+import { indentListItems, unindentListItems } from "@udecode/plate-list";
+import { useEditorRef } from "@udecode/plate/react";
+import { IndentIcon, OutdentIcon } from "lucide-react";
 
-import React from 'react';
-
-import { withRef } from '@udecode/cn';
-import { indentListItems, unindentListItems } from '@udecode/plate-list';
-import { useEditorRef } from '@udecode/plate/react';
-import { IndentIcon, OutdentIcon } from 'lucide-react';
-
-import { ToolbarButton } from './toolbar';
+import { ToolbarButton } from "./toolbar";
 
 export const ListIndentToolbarButton = withRef<
   typeof ToolbarButton,
@@ -21,7 +17,7 @@ export const ListIndentToolbarButton = withRef<
       onClick={() => {
         reverse ? unindentListItems(editor) : indentListItems(editor);
       }}
-      tooltip={reverse ? 'Outdent' : 'Indent'}
+      tooltip={reverse ? "Outdent" : "Indent"}
       {...rest}
     >
       {reverse ? <OutdentIcon /> : <IndentIcon />}

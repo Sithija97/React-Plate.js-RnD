@@ -1,14 +1,10 @@
-'use client';
-
-import React from 'react';
-
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
 import {
   useLineHeightDropdownMenu,
   useLineHeightDropdownMenuState,
-} from '@udecode/plate-line-height/react';
-import { WrapText } from 'lucide-react';
+} from "@udecode/plate-line-height/react";
+import { WrapText } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -17,8 +13,8 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 export function LineHeightDropdownMenu({ ...props }: DropdownMenuProps) {
   const openState = useOpenState();

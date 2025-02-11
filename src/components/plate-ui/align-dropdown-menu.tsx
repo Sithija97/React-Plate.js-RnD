@@ -1,19 +1,15 @@
-'use client';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import React from 'react';
-
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-
-import { setAlign } from '@udecode/plate-alignment';
-import { useEditorRef, useSelectionFragmentProp } from '@udecode/plate/react';
+import { setAlign } from "@udecode/plate-alignment";
+import { useEditorRef, useSelectionFragmentProp } from "@udecode/plate/react";
 import {
   AlignCenterIcon,
   AlignJustifyIcon,
   AlignLeftIcon,
   AlignRightIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { STRUCTURAL_TYPES } from '@/components/editor/transforms';
+import { STRUCTURAL_TYPES } from "@/components/editor/transforms";
 
 import {
   DropdownMenu,
@@ -22,32 +18,32 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 const items = [
   {
     icon: AlignLeftIcon,
-    value: 'left',
+    value: "left",
   },
   {
     icon: AlignCenterIcon,
-    value: 'center',
+    value: "center",
   },
   {
     icon: AlignRightIcon,
-    value: 'right',
+    value: "right",
   },
   {
     icon: AlignJustifyIcon,
-    value: 'justify',
+    value: "justify",
   },
 ];
 
 export function AlignDropdownMenu({ children, ...props }: DropdownMenuProps) {
   const editor = useEditorRef();
   const value = useSelectionFragmentProp({
-    defaultValue: 'start',
+    defaultValue: "start",
     structuralTypes: STRUCTURAL_TYPES,
     getProp: (node) => node.align,
   });

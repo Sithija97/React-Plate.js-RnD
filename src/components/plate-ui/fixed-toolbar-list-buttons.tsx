@@ -1,30 +1,26 @@
-'use client';
-
-import React from 'react';
-
 import {
   BoldPlugin,
   CodePlugin,
   ItalicPlugin,
   StrikethroughPlugin,
   UnderlinePlugin,
-} from '@udecode/plate-basic-marks/react';
+} from "@udecode/plate-basic-marks/react";
 import {
   FontBackgroundColorPlugin,
   FontColorPlugin,
-} from '@udecode/plate-font/react';
-import { HighlightPlugin } from '@udecode/plate-highlight/react';
+} from "@udecode/plate-font/react";
+import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import {
   BulletedListPlugin,
   NumberedListPlugin,
-} from '@udecode/plate-list/react';
+} from "@udecode/plate-list/react";
 import {
   AudioPlugin,
   FilePlugin,
   ImagePlugin,
   VideoPlugin,
-} from '@udecode/plate-media/react';
-import { useEditorReadOnly } from '@udecode/plate/react';
+} from "@udecode/plate-media/react";
+import { useEditorReadOnly } from "@udecode/plate/react";
 import {
   BaselineIcon,
   BoldIcon,
@@ -35,28 +31,28 @@ import {
   StrikethroughIcon,
   UnderlineIcon,
   WandSparklesIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { MoreDropdownMenu } from '@/components/plate-ui/more-dropdown-menu';
+import { MoreDropdownMenu } from "@/components/plate-ui/more-dropdown-menu";
 
-import { AIToolbarButton } from './ai-toolbar-button';
-import { AlignDropdownMenu } from './align-dropdown-menu';
-import { ColorDropdownMenu } from './color-dropdown-menu';
-import { CommentToolbarButton } from './comment-toolbar-button';
-import { EmojiDropdownMenu } from './emoji-dropdown-menu';
-import { RedoToolbarButton, UndoToolbarButton } from './history-toolbar-button';
-import { InsertDropdownMenu } from './insert-dropdown-menu';
-import { LineHeightDropdownMenu } from './line-height-dropdown-menu';
-import { LinkToolbarButton } from './link-toolbar-button';
-import { ListIndentToolbarButton } from './list-indent-toolbar-button';
-import { ListToolbarButton } from './list-toolbar-button';
-import { MarkToolbarButton } from './mark-toolbar-button';
-import { MediaToolbarButton } from './media-toolbar-button';
-import { ModeDropdownMenu } from './mode-dropdown-menu';
-import { TableDropdownMenu } from './table-dropdown-menu';
-import { ToggleToolbarButton } from './toggle-toolbar-button';
-import { ToolbarGroup } from './toolbar';
-import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
+import { AIToolbarButton } from "./ai-toolbar-button";
+import { AlignDropdownMenu } from "./align-dropdown-menu";
+import { ColorDropdownMenu } from "./color-dropdown-menu";
+import { CommentToolbarButton } from "./comment-toolbar-button";
+import { EmojiDropdownMenu } from "./emoji-dropdown-menu";
+import { RedoToolbarButton, UndoToolbarButton } from "./history-toolbar-button";
+import { InsertDropdownMenu } from "./insert-dropdown-menu";
+import { LineHeightDropdownMenu } from "./line-height-dropdown-menu";
+import { LinkToolbarButton } from "./link-toolbar-button";
+import { ListIndentToolbarButton } from "./list-indent-toolbar-button";
+import { ListToolbarButton } from "./list-toolbar-button";
+import { MarkToolbarButton } from "./mark-toolbar-button";
+import { MediaToolbarButton } from "./media-toolbar-button";
+import { ModeDropdownMenu } from "./mode-dropdown-menu";
+import { TableDropdownMenu } from "./table-dropdown-menu";
+import { ToggleToolbarButton } from "./toggle-toolbar-button";
+import { ToolbarGroup } from "./toolbar";
+import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
 
 export function FixedToolbarListButtons() {
   const readOnly = useEditorReadOnly();

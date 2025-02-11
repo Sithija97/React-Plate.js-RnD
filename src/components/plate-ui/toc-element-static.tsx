@@ -1,27 +1,25 @@
-import React from 'react';
+import type { SlateEditor, SlateElementProps, TElement } from "@udecode/plate";
 
-import type { SlateEditor, SlateElementProps, TElement } from '@udecode/plate';
-
-import { cn } from '@udecode/cn';
-import { NodeApi, SlateElement } from '@udecode/plate';
+import { cn } from "@udecode/cn";
+import { NodeApi, SlateElement } from "@udecode/plate";
 import {
   type Heading,
   BaseTocPlugin,
   HEADING_KEYS,
   isHeading,
-} from '@udecode/plate-heading';
-import { cva } from 'class-variance-authority';
+} from "@udecode/plate-heading";
+import { cva } from "class-variance-authority";
 
-import { Button } from './button';
+import { Button } from "./button";
 
 const headingItemVariants = cva(
-  'block h-auto w-full cursor-pointer truncate rounded-none px-0.5 py-1.5 text-left font-medium text-muted-foreground underline decoration-[0.5px] underline-offset-4 hover:bg-accent hover:text-muted-foreground',
+  "block h-auto w-full cursor-pointer truncate rounded-none px-0.5 py-1.5 text-left font-medium text-muted-foreground underline decoration-[0.5px] underline-offset-4 hover:bg-accent hover:text-muted-foreground",
   {
     variants: {
       depth: {
-        1: 'pl-0.5',
-        2: 'pl-[26px]',
-        3: 'pl-[50px]',
+        1: "pl-0.5",
+        2: "pl-[26px]",
+        3: "pl-[50px]",
       },
     },
   }
@@ -36,7 +34,7 @@ export function TocElementStatic({
   const headingList = getHeadingList(editor);
 
   return (
-    <SlateElement className={cn(className, 'mb-1 p-0')} {...props}>
+    <SlateElement className={cn(className, "mb-1 p-0")} {...props}>
       <div>
         {headingList.length > 0 ? (
           headingList.map((item) => (

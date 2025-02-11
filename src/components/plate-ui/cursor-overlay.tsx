@@ -1,14 +1,10 @@
-'use client';
-
-import React from 'react';
-
-import { cn } from '@udecode/cn';
-import { RangeApi } from '@udecode/plate';
+import { cn } from "@udecode/cn";
+import { RangeApi } from "@udecode/plate";
 import {
   type CursorData,
   type CursorOverlayState,
   useCursorOverlay,
-} from '@udecode/plate-selection/react';
+} from "@udecode/plate-selection/react";
 
 export function Cursor({
   id,
@@ -27,9 +23,9 @@ export function Cursor({
           <div
             key={i}
             className={cn(
-              'pointer-events-none absolute z-10',
-              id === 'selection' && 'bg-brand/25',
-              id === 'selection' && isCursor && 'bg-primary'
+              "pointer-events-none absolute z-10",
+              id === "selection" && "bg-brand/25",
+              id === "selection" && isCursor && "bg-primary"
             )}
             style={{
               ...selectionStyle,
@@ -41,8 +37,8 @@ export function Cursor({
       {caretPosition && (
         <div
           className={cn(
-            'pointer-events-none absolute z-10 w-0.5',
-            id === 'drag' && 'w-px bg-brand'
+            "pointer-events-none absolute z-10 w-0.5",
+            id === "drag" && "w-px bg-brand"
           )}
           style={{ ...caretPosition, ...style }}
         />

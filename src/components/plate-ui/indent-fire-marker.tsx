@@ -1,10 +1,8 @@
-import React from 'react';
-
-import type { SlateRenderElementProps } from '@udecode/plate';
-import type { TIndentElement } from '@udecode/plate-indent';
+import type { SlateRenderElementProps } from "@udecode/plate";
+import type { TIndentElement } from "@udecode/plate-indent";
 
 export const FireMarker = (
-  props: Omit<SlateRenderElementProps, 'children'>
+  props: Omit<SlateRenderElementProps, "children">
 ) => {
   const { element } = props;
 
@@ -12,11 +10,11 @@ export const FireMarker = (
     <div contentEditable={false}>
       <span
         className="select-none"
-        style={{ left: -26, position: 'absolute', top: -1 }}
+        style={{ left: -26, position: "absolute", top: -1 }}
         data-plate-prevent-deserialization
         contentEditable={false}
       >
-        {(element as TIndentElement).indent % 2 === 0 ? '🔥' : '🚀'}
+        {(element as TIndentElement).indent % 2 === 0 ? "🔥" : "🚀"}
       </span>
     </div>
   );

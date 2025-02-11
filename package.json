@@ -101,6 +101,7 @@
     "react-lite-youtube-embed": "^2.4.0",
     "react-player": "^2.16.0",
     "react-resizable-panels": "^2.1.7",
+    "react-router-dom": "^7.1.5",
     "react-textarea-autosize": "^8.5.7",
     "react-tweet": "^3.2.1",
     "slate": "^0.102.0",
@@ -117,6 +118,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.25",
+    "@types/prismjs": "^1.26.5",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^6.21.0",

@@ -1,11 +1,9 @@
-import React from 'react';
+import type { SlateElementProps } from "@udecode/plate";
+import type { TCaptionElement } from "@udecode/plate-caption";
+import type { TImageElement } from "@udecode/plate-media";
 
-import type { SlateElementProps } from '@udecode/plate';
-import type { TCaptionElement } from '@udecode/plate-caption';
-import type { TImageElement } from '@udecode/plate-media';
-
-import { cn } from '@udecode/cn';
-import { NodeApi, SlateElement } from '@udecode/plate';
+import { cn } from "@udecode/cn";
+import { NodeApi, SlateElement } from "@udecode/plate";
 
 export function ImageElementStatic({
   children,
@@ -14,7 +12,7 @@ export function ImageElementStatic({
   ...props
 }: SlateElementProps) {
   const {
-    align = 'center',
+    align = "center",
     caption,
     url,
     width,
@@ -25,7 +23,7 @@ export function ImageElementStatic({
 
   return (
     <SlateElement
-      className={cn(className, 'py-2.5')}
+      className={cn(className, "py-2.5")}
       {...props}
       nodeProps={nodeProps}
     >
@@ -36,8 +34,8 @@ export function ImageElementStatic({
         >
           <img
             className={cn(
-              'w-full max-w-full cursor-default object-cover px-0',
-              'rounded-sm'
+              "w-full max-w-full cursor-default object-cover px-0",
+              "rounded-sm"
             )}
             alt=""
             src={url}

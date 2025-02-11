@@ -1,20 +1,16 @@
-'use client';
+import type * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import type { TTableElement } from "@udecode/plate-table";
 
-import React from 'react';
-
-import type * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import type { TTableElement } from '@udecode/plate-table';
-
-import { PopoverAnchor } from '@radix-ui/react-popover';
-import { cn, withRef } from '@udecode/cn';
-import { BlockSelectionPlugin } from '@udecode/plate-selection/react';
+import { PopoverAnchor } from "@radix-ui/react-popover";
+import { cn, withRef } from "@udecode/cn";
+import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 import {
   TablePlugin,
   TableProvider,
   useTableBordersDropdownMenuContentState,
   useTableElement,
   useTableMergeState,
-} from '@udecode/plate-table/react';
+} from "@udecode/plate-table/react";
 import {
   useEditorPlugin,
   useEditorRef,
@@ -25,7 +21,7 @@ import {
   useRemoveNodeButton,
   useSelected,
   withHOC,
-} from '@udecode/plate/react';
+} from "@udecode/plate/react";
 import {
   ArrowDown,
   ArrowLeft,
@@ -36,7 +32,7 @@ import {
   SquareSplitHorizontalIcon,
   Trash2Icon,
   XIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -45,9 +41,9 @@ import {
   DropdownMenuGroup,
   DropdownMenuPortal,
   DropdownMenuTrigger,
-} from './dropdown-menu';
-import { PlateElement } from './plate-element';
-import { Popover, PopoverContent } from './popover';
+} from "./dropdown-menu";
+import { PlateElement } from "./plate-element";
+import { Popover, PopoverContent } from "./popover";
 import {
   BorderAll,
   BorderBottom,
@@ -55,57 +51,59 @@ import {
   BorderNone,
   BorderRight,
   BorderTop,
-} from './table-icons';
-import { Toolbar, ToolbarButton, ToolbarGroup } from './toolbar';
+} from "./table-icons";
+import { Toolbar, ToolbarButton, ToolbarGroup } from "./toolbar";
 
 export const TableElement = withHOC(
   TableProvider,
-  withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
-    const readOnly = useReadOnly();
-    const isSelectionAreaVisible = usePluginOption(
-      BlockSelectionPlugin,
-      'isSelectionAreaVisible'
-    );
-    const hasControls = !readOnly && !isSelectionAreaVisible;
-    const selected = useSelected();
-    const {
-      isSelectingCell,
-      marginLeft,
-      props: tableProps,
-    } = useTableElement();
+  withRef<typeof PlateElement>(
+    ({ children, className, ...props }, ref: any) => {
+      const readOnly = useReadOnly();
+      const isSelectionAreaVisible = usePluginOption(
+        BlockSelectionPlugin,
+        "isSelectionAreaVisible"
+      );
+      const hasControls = !readOnly && !isSelectionAreaVisible;
+      const selected = useSelected();
+      const {
+        isSelectingCell,
+        marginLeft,
+        props: tableProps,
+      } = useTableElement();
 
-    const content = (
-      <PlateElement
-        className={cn(
-          className,
-          'overflow-x-auto py-5',
-          hasControls && '-ml-2'
-        )}
-        style={{ paddingLeft: marginLeft }}
-        blockSelectionClassName={cn(hasControls && 'left-2')}
-        {...props}
-      >
-        <div className="group/table relative w-fit">
-          <table
-            ref={ref}
-            className={cn(
-              'mr-0 ml-px table h-px table-fixed border-collapse',
-              isSelectingCell && 'selection:bg-transparent'
-            )}
-            {...tableProps}
-          >
-            <tbody className="min-w-full">{children}</tbody>
-          </table>
-        </div>
-      </PlateElement>
-    );
+      const content = (
+        <PlateElement
+          className={cn(
+            className,
+            "overflow-x-auto py-5",
+            hasControls && "-ml-2"
+          )}
+          style={{ paddingLeft: marginLeft }}
+          blockSelectionClassName={cn(hasControls && "left-2")}
+          {...props}
+        >
+          <div className="group/table relative w-fit">
+            <table
+              ref={ref}
+              className={cn(
+                "mr-0 ml-px table h-px table-fixed border-collapse",
+                isSelectingCell && "selection:bg-transparent"
+              )}
+              {...tableProps}
+            >
+              <tbody className="min-w-full">{children}</tbody>
+            </table>
+          </div>
+        </PlateElement>
+      );
 
-    if (readOnly || !selected) {
-      return content;
+      if (readOnly || !selected) {
+        return content;
+      }
+
+      return <TableFloatingToolbar>{content}</TableFloatingToolbar>;
     }
-
-    return <TableFloatingToolbar>{content}</TableFloatingToolbar>;
-  })
+  )
 );
 
 export const TableFloatingToolbar = withRef<typeof PopoverContent>(
@@ -262,7 +260,7 @@ export const TableBordersDropdownMenuContent = withRef<
   return (
     <DropdownMenuContent
       ref={ref}
-      className={cn('min-w-[220px]')}
+      className={cn("min-w-[220px]")}
       onCloseAutoFocus={(e) => {
         e.preventDefault();
         editor.tf.focus();
@@ -275,28 +273,28 @@ export const TableBordersDropdownMenuContent = withRef<
       <DropdownMenuGroup>
         <DropdownMenuCheckboxItem
           checked={hasTopBorder}
-          onCheckedChange={getOnSelectTableBorder('top')}
+          onCheckedChange={getOnSelectTableBorder("top")}
         >
           <BorderTop />
           <div>Top Border</div>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={hasRightBorder}
-          onCheckedChange={getOnSelectTableBorder('right')}
+          onCheckedChange={getOnSelectTableBorder("right")}
         >
           <BorderRight />
           <div>Right Border</div>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={hasBottomBorder}
-          onCheckedChange={getOnSelectTableBorder('bottom')}
+          onCheckedChange={getOnSelectTableBorder("bottom")}
         >
           <BorderBottom />
           <div>Bottom Border</div>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={hasLeftBorder}
-          onCheckedChange={getOnSelectTableBorder('left')}
+          onCheckedChange={getOnSelectTableBorder("left")}
         >
           <BorderLeft />
           <div>Left Border</div>
@@ -306,14 +304,14 @@ export const TableBordersDropdownMenuContent = withRef<
       <DropdownMenuGroup>
         <DropdownMenuCheckboxItem
           checked={hasNoBorders}
-          onCheckedChange={getOnSelectTableBorder('none')}
+          onCheckedChange={getOnSelectTableBorder("none")}
         >
           <BorderNone />
           <div>No Border</div>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={hasOuterBorders}
-          onCheckedChange={getOnSelectTableBorder('outer')}
+          onCheckedChange={getOnSelectTableBorder("outer")}
         >
           <BorderAll />
           <div>Outside Borders</div>

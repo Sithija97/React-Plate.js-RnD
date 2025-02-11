@@ -1,16 +1,12 @@
-'use client';
-
-import React from 'react';
-
-import { withRef } from '@udecode/cn';
+import { withRef } from "@udecode/cn";
 import {
   BulletedListPlugin,
   useListToolbarButton,
   useListToolbarButtonState,
-} from '@udecode/plate-list/react';
-import { List, ListOrdered } from 'lucide-react';
+} from "@udecode/plate-list/react";
+import { List, ListOrdered } from "lucide-react";
 
-import { ToolbarButton } from './toolbar';
+import { ToolbarButton } from "./toolbar";
 
 export const ListToolbarButton = withRef<
   typeof ToolbarButton,
@@ -25,7 +21,7 @@ export const ListToolbarButton = withRef<
     <ToolbarButton
       ref={ref}
       tooltip={
-        nodeType === BulletedListPlugin.key ? 'Bulleted List' : 'Numbered List'
+        nodeType === BulletedListPlugin.key ? "Bulleted List" : "Numbered List"
       }
       {...props}
       {...rest}

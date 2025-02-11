@@ -1,13 +1,9 @@
-'use client';
+import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
+import { MarkdownPlugin } from "@udecode/plate-markdown";
 
-import React from 'react';
+import { AIMenu } from "@/components/plate-ui/ai-menu";
 
-import { AIChatPlugin, AIPlugin } from '@udecode/plate-ai/react';
-import { MarkdownPlugin } from '@udecode/plate-markdown';
-
-import { AIMenu } from '@/components/plate-ui/ai-menu';
-
-import { cursorOverlayPlugin } from './cursor-overlay-plugin';
+import { cursorOverlayPlugin } from "./cursor-overlay-plugin";
 
 const systemCommon = `\
 You are an advanced AI-powered note-taking assistant, designed to enhance productivity and creativity in note management.
@@ -96,19 +92,31 @@ export const aiPlugins = [
   AIPlugin,
   AIChatPlugin.configure({
     options: {
-      promptTemplate: ({ isBlockSelecting, isSelecting }) => {
+      promptTemplate: ({
+        isBlockSelecting,
+        isSelecting,
+      }: {
+        isBlockSelecting: boolean;
+        isSelecting: boolean;
+      }) => {
         return isBlockSelecting
           ? PROMPT_TEMPLATES.userBlockSelecting
           : isSelecting
-            ? PROMPT_TEMPLATES.userSelecting
-            : PROMPT_TEMPLATES.userDefault;
+          ? PROMPT_TEMPLATES.userSelecting
+          : PROMPT_TEMPLATES.userDefault;
       },
-      systemTemplate: ({ isBlockSelecting, isSelecting }) => {
+      systemTemplate: ({
+        isBlockSelecting,
+        isSelecting,
+      }: {
+        isBlockSelecting: boolean;
+        isSelecting: boolean;
+      }) => {
         return isBlockSelecting
           ? PROMPT_TEMPLATES.systemBlockSelecting
           : isSelecting
-            ? PROMPT_TEMPLATES.systemSelecting
-            : PROMPT_TEMPLATES.systemDefault;
+          ? PROMPT_TEMPLATES.systemSelecting
+          : PROMPT_TEMPLATES.systemDefault;
       },
     },
     render: { afterEditable: () => <AIMenu /> },
